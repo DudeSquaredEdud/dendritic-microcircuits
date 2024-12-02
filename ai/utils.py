@@ -4,7 +4,7 @@ import numpy as np
 
 from ai.config import Config
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 def iter_with_prev(it: Iterable[T]):

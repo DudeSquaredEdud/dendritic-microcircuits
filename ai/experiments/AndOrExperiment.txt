@@ -104,7 +104,7 @@ class AndOrExperiment(Experiment):
             l2.pyr_soma_mps[2],
         )
 
-    def pyramidal_data_extraction(self, layer):
+    def ashton_name_this_later(self, layer):
         self.pyramidal_weights = np.append(self.pyramidal_weights, layer.id_num)
         for neuronNum, neuron in enumerate(layer.pyrs):
             self.pyramidal_weights = np.append(self.pyramidal_weights, neuron.id_num)
@@ -113,7 +113,7 @@ class AndOrExperiment(Experiment):
             self.pyramidal_weights = np.append(self.pyramidal_weights, neuron.soma_mp)
             self.pyramidal_weights = np.append(self.pyramidal_weights, neuron.soma_act)
 
-    def interneuron_data_extraction(self, layer):
+    def ashton_name_this_later_too(self, layer):
         self.interneuron_weights = np.append(self.interneuron_weights, layer.id_num)
         for neuronNum, neuron in enumerate(layer.inhibs):
             self.interneuron_weights = np.append(
@@ -139,24 +139,23 @@ class AndOrExperiment(Experiment):
         if nudge_predicate:
             l2.nudge_output_layer_neurons(*self._current_label, lambda_nudge=0.8)
         self.__do_fb_sweep()
-        self.pyramidal_data_extraction(l1)
-
+        self.ashton_name_this_later(l1)
         ashton_file = open("pyramidal.txt", "a")
         ashton_file.write(np.array2string(self.pyramidal_weights) + "\n")
         ashton_file.close
         self.pyramidal_weights = np.array([])
-        self.pyramidal_data_extraction(l2)
+        self.ashton_name_this_later(l2)
         ashton_file = open("pyramidal.txt", "a")
         ashton_file.write(np.array2string(self.pyramidal_weights) + "\n")
         ashton_file.close
         self.pyramidal_weights = np.array([])
 
-        self.interneuron_data_extraction(l1)
+        self.ashton_name_this_later_too(l1)
         ashton_file = open("interneuron.txt", "a")
         ashton_file.write(np.array2string(self.interneuron_weights) + "\n")
         ashton_file.close
         self.interneuron_weights = np.array([])
-        self.interneuron_data_extraction(l2)
+        self.ashton_name_this_later_too(l2)
         ashton_file = open("interneuron.txt", "a")
         ashton_file.write(np.array2string(self.interneuron_weights) + "\n")
         ashton_file.close

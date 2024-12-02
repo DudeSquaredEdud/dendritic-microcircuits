@@ -2,7 +2,9 @@ from ai.utils import logsig
 
 
 class PyrNRN:
-    def __init__(self, i: int, rng, beta: float, n_ff_wt: int, n_pi_lat_wt: int, n_fb_wt: int):  # wt_counts
+    def __init__(
+        self, i: int, rng, beta: float, n_ff_wt: int, n_pi_lat_wt: int, n_fb_wt: int
+    ):  # wt_counts
         """
         :param n_ff_wt: num of incoming feedforward wts
         :param n_pi_lat_wt: num of incoming lateral wts
@@ -64,6 +66,6 @@ class PyrNRN:
     def update_pyr_soma_ff(self):
         self.soma_mp = self.basal_mp  # start from basal_mp
         # 1.0 / (g_lk + g_A + g_B) = 1.0 / (0.1 + 0.8 + 1.0) = 1.0 / 1.9 = 0.5263157894736842
-        self.basal_hat = .5263157894736842 * self.basal_mp
+        self.basal_hat = 0.5263157894736842 * self.basal_mp
         self.basal_hat_act = logsig(self.basal_hat)
         self.soma_act = logsig(self.soma_mp)  # propagate to soma
