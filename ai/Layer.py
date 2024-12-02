@@ -9,12 +9,28 @@ logger = get_logger("ai.Layer")
 
 
 class Layer:
-    def __init__(self, i: int, learning_rate_ff, learning_rate_lat, rng, n_pyrs, n_inhibs, n_pyr_ff_wt, n_pi_lat_wt, n_pyr_fb_wt, beta, n_ip_lat_wt):
+    def __init__(
+        self,
+        i: int,
+        learning_rate_ff,
+        learning_rate_lat,
+        rng,
+        n_pyrs,
+        n_inhibs,
+        n_pyr_ff_wt,
+        n_pi_lat_wt,
+        n_pyr_fb_wt,
+        beta,
+        n_ip_lat_wt,
+    ):
         self._learning_rate_ff = learning_rate_ff
         self._learning_rate_lat = learning_rate_lat
 
         self.id_num = i
-        self.pyrs = [PyrNRN(i + 1, rng, beta, n_pyr_ff_wt, n_pi_lat_wt, n_pyr_fb_wt) for i in range(n_pyrs)]
+        self.pyrs = [
+            PyrNRN(i + 1, rng, beta, n_pyr_ff_wt, n_pi_lat_wt, n_pyr_fb_wt)
+            for i in range(n_pyrs)
+        ]
         self.inhibs = [InhibNRN(i + 1, rng, beta, n_ip_lat_wt) for i in range(n_inhibs)]
 
     def __repr__(self):
@@ -94,11 +110,15 @@ class Layer:
             self.pyrs[i].apical_mp = self.pyrs[i].apical_fb + self.pyrs[i].apical_lat
             # self.pyrs[i].apical_mp = np.dot(self.pyrs[i].W_PP_fb, fb_acts) + np.dot(self.pyrs[i].W_PI_lat, inhib_acts)
             self.pyrs[i].apical_act = logsig(self.pyrs[i].apical_mp)
-            self.pyrs[i].apical_hat = 0.5 * self.pyrs[i].apical_mp  # approximation to Eqn (14)
+            self.pyrs[i].apical_hat = (
+                0.5 * self.pyrs[i].apical_mp
+            )  # approximation to Eqn (14)
             self.pyrs[i].apical_hat_act = logsig(self.pyrs[i].apical_hat)
-            self.pyrs[i].soma_mp = self.pyrs[i].basal_minus_soma_mp + self.pyrs[i].apical_minus_soma_mp
-#            self.pyrs[i].soma_mp = ((self.pyrs[i].basal_mp - self.pyrs[i].soma_mp)
-#                                    + (self.pyrs[i].apical_mp - self.pyrs[i].soma_mp))
+            self.pyrs[i].soma_mp = (
+                self.pyrs[i].basal_minus_soma_mp + self.pyrs[i].apical_minus_soma_mp
+            )
+            #            self.pyrs[i].soma_mp = ((self.pyrs[i].basal_mp - self.pyrs[i].soma_mp)
+            #                                    + (self.pyrs[i].apical_mp - self.pyrs[i].soma_mp))
             self.pyrs[i].soma_act = logsig(self.pyrs[i].soma_mp)
 
     ########################
@@ -111,7 +131,9 @@ class Layer:
         """
         for i in range(len(self.pyrs)):
             pyr = self.pyrs[i]
-            pyr.soma_mp = (1 - lambda_nudge) * pyr.basal_mp + lambda_nudge * targ_vals[i]
+            pyr.soma_mp = (1 - lambda_nudge) * pyr.basal_mp + lambda_nudge * targ_vals[
+                i
+            ]
             pyr.soma_act = logsig(pyr.soma_mp)
 
     #############
@@ -156,8 +178,14 @@ class Layer:
 
     def adjust_wts_lat_pi(self):  # adjust PI wts for layer. Eqn 16b
         for i in range(len(self.pyrs)):
-            for j in range(len(self.inhibs)):  # V_rest is not include below b/c its value is zero.
-                self.pyrs[i].W_PI_lat[j] -= self._learning_rate_lat * self.pyrs[i].apical_mp * self.inhibs[j].soma_act
+            for j in range(
+                len(self.inhibs)
+            ):  # V_rest is not include below b/c its value is zero.
+                self.pyrs[i].W_PI_lat[j] -= (
+                    self._learning_rate_lat
+                    * self.pyrs[i].apical_mp
+                    * self.inhibs[j].soma_act
+                )
                 # change for wt projecting to pyr i from inhib j.
 
     def adjust_wts_pp_ff(self, prev_layer: "Layer"):  # Adjust FF wts for layer. Eqn 13
@@ -182,7 +210,9 @@ class Layer:
     # Printing information #
     ########################
 
-    def print_apical_mps(self):  # need to know if these are converging to 0 to assess self-predictive state
+    def print_apical_mps(
+        self,
+    ):  # need to know if these are converging to 0 to assess self-predictive state
         """print the apical membrane potentials for the layer"""
         logger.info(f"Layer {self.id_num}")
         for i in range(len(self.pyrs)):

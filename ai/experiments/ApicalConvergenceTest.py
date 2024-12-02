@@ -3,8 +3,8 @@ from werkzeug.datastructures import MultiDict
 
 from ai.colorized_logger import get_logger
 from ai.experiments.Experiment import Experiment
-from ai.experiments.visualization_extractor import VisualExtractor
 from ai.utils import create_column_vector, iter_with_prev
+from metrics.visualization_metrics.visualization_extractor import VisualExtractor
 from metrics import Graph, Serie, GraphType
 
 
