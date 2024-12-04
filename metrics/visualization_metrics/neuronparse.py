@@ -91,7 +91,6 @@ class NeuronParser:
             parsed_arrays[n : n + layer_amount]
             for n in range(0, len(parsed_arrays), layer_amount)
         ]
-
         # regroup them into layer_amount groups of arrays
         for grouped_arrays in parsed_arrays_by_layer_count:
             for i in range(layer_amount):
@@ -185,7 +184,7 @@ class NeuronParser:
         num_layers = len(list_of_arrays)
 
         # zip the array of deltas
-        zipped_delta_array, num_layers = self.__zip_delta_array(num_layers, delta_array)
+        zipped_delta_array = self.__zip_delta_array(num_layers, delta_array)
 
         # get the output values
         json_output = self.__zipped_delta_to_json(zipped_delta_array, num_layers, mode)
@@ -201,3 +200,8 @@ class NeuronParser:
         """
         list_of_arrays = self.__file_to_list_of_arrays(file_name)
         self.__list_of_arrays_to_delta(list_of_arrays, file_name, mode)
+
+
+if __name__ == "__main__":
+    ns = NeuronParser()
+    ns.file_to_delta("ACT_pyramidal.txt", "p")

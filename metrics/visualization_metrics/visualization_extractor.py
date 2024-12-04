@@ -4,6 +4,7 @@ By Ashton Andrepont
 """
 
 import numpy as np
+import time
 from .neuronparse import NeuronParser
 
 
@@ -16,8 +17,8 @@ class VisualExtractor:
     def __init__(self, file_name: str):
         self.pyramidal_weights = np.array([])
         self.interneuron_weights = np.array([])
-        self.output_file_p = open((file_name + "_pyramidal.txt"), "a")
-        self.output_file_i = open((file_name + "_interneuron.txt"), "a")
+        self.output_file_p = open((file_name + "_pyramidal.txt"), "w")
+        self.output_file_i = open((file_name + "_interneuron.txt"), "w")
         np.set_printoptions(suppress=True, threshold=np.inf)
         self.neuron_parser = NeuronParser()
 
@@ -42,13 +43,14 @@ class VisualExtractor:
 
     def close(self) -> None:
         """
-        Converts the files into JSONs and loses the extractor.
+        Closes the extractor.
 
         Please remember to run this at the end.
         """
-        for file, mode in [[self.output_file_i, "i"], [self.output_file_p, "p"]]:
-            self.neuron_parser.file_to_delta(file.name, mode)
-            file.close()
+        self.output_file_p.close()
+        self.output_file_i.close()
+        self.neuron_parser.file_to_delta(self.output_file_p.name, "p")
+        self.neuron_parser.file_to_delta(self.output_file_i.name, "i")
 
     def __pyramidal_data_extraction(self, layer) -> None:
         self.pyramidal_weights = np.append(self.pyramidal_weights, layer.id_num)

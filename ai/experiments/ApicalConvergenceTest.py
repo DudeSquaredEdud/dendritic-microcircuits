@@ -1,3 +1,4 @@
+import time
 import numpy as np
 from werkzeug.datastructures import MultiDict
 
@@ -5,6 +6,7 @@ from ai.colorized_logger import get_logger
 from ai.experiments.Experiment import Experiment
 from ai.utils import create_column_vector, iter_with_prev
 from metrics.visualization_metrics.visualization_extractor import VisualExtractor
+from metrics.visualization_metrics.neuronparse import NeuronParser
 from metrics import Graph, Serie, GraphType
 
 
@@ -325,6 +327,8 @@ class ApicalConvergenceTest(Experiment):
         basal_minus_soma_mp_l2 = self._metrics[KEY_L2_BASAL_MINUS_SOMA_PYR_MP]
         apical_minus_soma_mp_l2 = self._metrics[KEY_L2_APICAL_MINUS_SOMA_PYR_MP]
 
+        self.visual_extractor.close()
+
         return [
             Graph(
                 type=GraphType.LINE,
@@ -609,6 +613,3 @@ class ApicalConvergenceTest(Experiment):
         logger.info("Final activations after nudging is removed")
         self.print_pyr_activations_all_layers_topdown()  # shows the true effect of learning
         logger.info("FINISH: Performing nudge experiment with rules 16b and 13.")
-
-        # Close the visual extractor
-        self.visual_extractor.close()
